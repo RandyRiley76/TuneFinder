@@ -13,14 +13,25 @@ public class SelectionManager : MonoBehaviour
 
    // public Material colorMaterial;
     public Material[] colorMaterial;
+    public Material[] color2Material;
 
+    private Vector3 toScale = new Vector3(0.5f, 0.5f, 0.5f);
 
-
-
+    private void OnMouseEnter()
+    {
+        //  gameObject.GetComponent<Renderer>().material = colorMaterial;
+        gameObject.GetComponent<Renderer>().material = colorMaterial[chosenSelectorNumber];
+        gameObject.transform.localScale += toScale;
+    }
+    private void OnMouseExit()
+    {
+        gameObject.GetComponent<Renderer>().material = color2Material[chosenSelectorNumber];
+        gameObject.transform.localScale -= toScale;
+    }
     void OnMouseDown()
     {
         playerAudio.PlayOneShot(notes[chosenSelectorNumber], 1f);
-        Debug.Log(chosenSelectorNumber);
+       // Debug.Log(chosenSelectorNumber);
         //gameObject.GetComponent<Renderer>().material = colorMaterial;
         
     }
@@ -40,7 +51,7 @@ public class SelectionManager : MonoBehaviour
     {
         playerAudio = GetComponent<AudioSource>();
         //SETS COLOR MATERIAL
-        gameObject.GetComponent<Renderer>().material = colorMaterial[chosenSelectorNumber];
+        gameObject.GetComponent<Renderer>().material = color2Material[chosenSelectorNumber];
         //Debug.Log();
     }
 
