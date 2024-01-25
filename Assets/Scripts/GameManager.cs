@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
    public List<int> notesPlayed = new List<int>();
    public List<int> playerNotesPlayed = new List<int>();
     public bool playerTurn = false;
+
+    public GameObject highScoreText;
+    public int highScore =0;
    
 
     private void Awake()
@@ -52,7 +55,7 @@ public class GameManager : MonoBehaviour
          currentSpawn++;//USED IN SELECTION MANAGER
         }
 
-      //  StartCoroutine( CircleDance());
+        
     }
 
     // Update is called once per frame
@@ -62,15 +65,19 @@ public class GameManager : MonoBehaviour
     }
    public IEnumerator CircleDance()
     {
-       
-        
-        //Debug.Log(thisSphere[1].GetComponent<SelectionManager>().chosenSelectorNumber);
-        for (var i = 0; i < 5; i++)
+
+
+        for (var j = 0; j < 2; j++)
         {
-           
-            thisSphere[i].GetComponent<SelectionManager>().FlashAsSelected();
-            yield return new WaitForSecondsRealtime(.2f);
+            // for (var i = 0; i < 5; i++)//for accending
+            for (var i = 4; i >= 0; i--)//for decending
+            {
+
+                thisSphere[i].GetComponent<SelectionManager>().FlashAsSelected();
+                yield return new WaitForSecondsRealtime(.2f);
+            }
         }
+        StartCoroutine(middleButton.GetComponent<MiddleButton>().StartRoundReady());
     }
     public IEnumerator ShowSequenceAddOne()
     {
@@ -90,10 +97,14 @@ public class GameManager : MonoBehaviour
     {
         for (var i = 0; i < playerNotesPlayed.Count; i++)
         {
-            if (playerNotesPlayed[i] == notesPlayed[i])
+            if (playerNotesPlayed[i] == notesPlayed[i])//Played the right note
             {
-                //START A NEW ROUND IF YOU GOT ALL THE NOTES RIGHT
-                if (playerNotesPlayed.Count == notesPlayed.Count)
+                if (playerNotesPlayed.Count > highScore) {
+                    highScore = playerNotesPlayed.Count;
+                    highScoreText.GetComponent<TextMeshProUGUI>().text = "High Score " + highScore;
+                }
+
+                if (playerNotesPlayed.Count == notesPlayed.Count)//START A NEW ROUND IF YOU GOT ALL THE NOTES RIGHT
                 {
                     playerNotesPlayed.Clear();
                     playerTurn = false;
@@ -101,14 +112,14 @@ public class GameManager : MonoBehaviour
                     StartCoroutine(ShowSequenceAddOne());
                 }
             }
-            else
+            else//YOU PLAYED WRONG AND RESET GAME
             {
                 StartCoroutine(CircleDance());
                 Debug.Log("You didn't play it right");
                 playerNotesPlayed.Clear();
                 notesPlayed.Clear();
                 playerTurn = false;
-                StartCoroutine(middleButton.GetComponent<MiddleButton>().StartRoundReady());
+                
                 break;
             }
         }
