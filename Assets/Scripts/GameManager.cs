@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     private GameObject[] thisSphere = new GameObject[5];
     public SelectionManager selectionManager;
 
+    public GameObject middleButton;
 
    public List<int> notesPlayed = new List<int>();
    public List<int> playerNotesPlayed = new List<int>();
@@ -107,6 +108,7 @@ public class GameManager : MonoBehaviour
                 playerNotesPlayed.Clear();
                 notesPlayed.Clear();
                 playerTurn = false;
+                StartCoroutine(middleButton.GetComponent<MiddleButton>().StartRoundReady());
                 break;
             }
         }

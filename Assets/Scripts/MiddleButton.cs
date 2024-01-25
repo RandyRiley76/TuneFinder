@@ -10,15 +10,22 @@ public class MiddleButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       // StartCoroutine(StartRoundReady());
-        gameObject.GetComponent<Renderer>().material = matHighlight;
+        StartCoroutine(StartRoundReady());
+       // gameObject.GetComponent<Renderer>().material = matHighlight;
     }
 
-    public  IEnumerable StartRoundReady()
+   public  IEnumerator StartRoundReady()
     {
-        yield return new WaitForSecondsRealtime(.3f);
-        gameObject.GetComponent<Renderer>().material = matHighlight;
-        yield return new WaitForSecondsRealtime(.3f);
+        while (GameManager.Instance.playerTurn == false)
+        {
+            yield return new WaitForSecondsRealtime(.3f);
+            gameObject.GetComponent<Renderer>().material = matHighlight;
+            if (GameManager.Instance.playerTurn == false)
+            {
+                yield return new WaitForSecondsRealtime(.3f);
+                gameObject.GetComponent<Renderer>().material = matDull;
+            }
+        }
         gameObject.GetComponent<Renderer>().material = matDull;
     }
     // Update is called once per frame
