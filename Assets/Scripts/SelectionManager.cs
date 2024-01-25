@@ -17,42 +17,46 @@ public class SelectionManager : MonoBehaviour
 
     private Vector3 toScale = new Vector3(0.5f, 0.5f, 0.5f);
 
-    private void OnMouseEnter()
+    public void makeSelected()
     {
-        //  gameObject.GetComponent<Renderer>().material = colorMaterial;
         gameObject.GetComponent<Renderer>().material = colorMaterial[chosenSelectorNumber];
         gameObject.transform.localScale += toScale;
     }
-    private void OnMouseExit()
+    public void makeDeselected()
     {
         gameObject.GetComponent<Renderer>().material = color2Material[chosenSelectorNumber];
         gameObject.transform.localScale -= toScale;
     }
+    private void OnMouseEnter()
+    {
+        makeSelected();
+    }
+    private void OnMouseExit()
+    {
+        makeDeselected();
+    }
     void OnMouseDown()
     {
         playerAudio.PlayOneShot(notes[chosenSelectorNumber], 1f);
-       // Debug.Log(chosenSelectorNumber);
-        //gameObject.GetComponent<Renderer>().material = colorMaterial;
         
     }
 
     private void Awake()
     {
         chosenSelectorNumber = GameManager.Instance.currentSpawn;
+        gameObject.GetComponent<Renderer>().material = color2Material[chosenSelectorNumber];//Set to drab colors
+
+
     }
-
-
-
-
-
-
     // Start is called before the first frame update
     void Start()
     {
         playerAudio = GetComponent<AudioSource>();
-        //SETS COLOR MATERIAL
-        gameObject.GetComponent<Renderer>().material = color2Material[chosenSelectorNumber];
-        //Debug.Log();
+        
     }
-
+   public void FlashAsSelected() {
+        makeSelected();
+        playerAudio.PlayOneShot(notes[chosenSelectorNumber], 1f);
+        Invoke("makeDeselected", .1f);
+    }
 }
