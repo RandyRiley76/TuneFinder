@@ -48,7 +48,7 @@ public class SelectionManager : MonoBehaviour
         if (GameManager.Instance.playerTurn)
         {
             FlashAsSelected();
-            playerAudio.PlayOneShot(notes[chosenSelectorNumber], 1f);
+            playerAudio.PlayOneShot(notes[chosenSelectorNumber], 1f);//1f is the volume
             GameManager.Instance.playerNotesPlayed.Add(chosenSelectorNumber);
             GameManager.Instance.CheckIfPlayedRightNote();
         }

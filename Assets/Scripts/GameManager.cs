@@ -95,33 +95,38 @@ public class GameManager : MonoBehaviour
     }
     public void CheckIfPlayedRightNote()
     {
-        for (var i = 0; i < playerNotesPlayed.Count; i++)
+        if (notesPlayed[playerNotesPlayed.Count - 1] == playerNotesPlayed[playerNotesPlayed.Count - 1])
         {
-            if (playerNotesPlayed[i] == notesPlayed[i])//Played the right note
-            {
-                if (playerNotesPlayed.Count > highScore) {
-                    highScore = playerNotesPlayed.Count;
-                    highScoreText.GetComponent<TextMeshProUGUI>().text = "High Score " + highScore;
-                }
 
-                if (playerNotesPlayed.Count == notesPlayed.Count)//START A NEW ROUND IF YOU GOT ALL THE NOTES RIGHT
-                {
-                    playerNotesPlayed.Clear();
-                    playerTurn = false;
-                    Debug.Log("NewRound");
-                    StartCoroutine(ShowSequenceAddOne());
-                }
-            }
-            else//YOU PLAYED WRONG AND RESET GAME
+
+            //START A NEW ROUND IF YOU GOT ALL THE NOTES RIGHT
+
+             if (playerNotesPlayed.Count > highScore)
+             {
+                 highScore = playerNotesPlayed.Count;
+                 highScoreText.GetComponent<TextMeshProUGUI>().text = "High Score " + highScore;
+             }
+            if (playerNotesPlayed.Count == notesPlayed.Count)
             {
-                StartCoroutine(CircleDance());
-                Debug.Log("You didn't play it right");
                 playerNotesPlayed.Clear();
-                notesPlayed.Clear();
                 playerTurn = false;
-                
-                break;
+                // Debug.Log("NewRound");
+                StartCoroutine(ShowSequenceAddOne());
             }
+
+            
         }
+        else//YOU PLAYED WRONG AND RESET GAME
+        {
+            StartCoroutine(CircleDance());
+            //Debug.Log("You didn't play it right");
+            playerNotesPlayed.Clear();
+            notesPlayed.Clear();
+            playerTurn = false;
+
+            //break;
+        }
+       
     }
+
 }
