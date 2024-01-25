@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
+
 public class GameManager : MonoBehaviour
 {
     public GameObject selectionSphere;
@@ -16,8 +17,10 @@ public class GameManager : MonoBehaviour
     public SelectionManager selectionManager;
 
 
-    List<int> notesPlayed = new List<int>();
-    // private int notesInSequence =
+   public List<int> notesPlayed = new List<int>();
+   public List<int> playerNotesPlayed = new List<int>();
+    public bool playerTurn = false;
+   
 
     private void Awake()
     {
@@ -70,7 +73,7 @@ public class GameManager : MonoBehaviour
     }
     public IEnumerator ShowSequenceAddOne()
     {
-        
+        yield return new WaitForSecondsRealtime(1f);
         for (var i = 0; i < notesPlayed.Count; i++) {
             thisSphere[notesPlayed[i]].GetComponent<SelectionManager>().FlashAsSelected();
             yield return new WaitForSecondsRealtime(.3f);
@@ -79,7 +82,33 @@ public class GameManager : MonoBehaviour
         // Debug.Log(i);
         var lastInList = notesPlayed[notesPlayed.Count-1];
         thisSphere[lastInList].GetComponent<SelectionManager>().FlashAsSelected();
+        playerTurn = true;
 
-
+    }
+    public void CheckIfPlayedRightNote()
+    {
+        for (var i = 0; i < playerNotesPlayed.Count; i++)
+        {
+            if (playerNotesPlayed[i] == notesPlayed[i])
+            {
+                //START A NEW ROUND IF YOU GOT ALL THE NOTES RIGHT
+                if (playerNotesPlayed.Count == notesPlayed.Count)
+                {
+                    playerNotesPlayed.Clear();
+                    playerTurn = false;
+                    Debug.Log("NewRound");
+                    StartCoroutine(ShowSequenceAddOne());
+                }
+            }
+            else
+            {
+                StartCoroutine(CircleDance());
+                Debug.Log("You didn't play it right");
+                playerNotesPlayed.Clear();
+                notesPlayed.Clear();
+                playerTurn = false;
+                break;
+            }
+        }
     }
 }

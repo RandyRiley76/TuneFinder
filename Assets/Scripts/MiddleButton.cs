@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class MiddleButton : MonoBehaviour
 {
-    public GameManager gameManager;
+
+    public Material matHighlight;
+    public Material matDull;
     // Start is called before the first frame update
     void Start()
     {
-        
+       // StartCoroutine(StartRoundReady());
+        gameObject.GetComponent<Renderer>().material = matHighlight;
     }
 
+    public  IEnumerable StartRoundReady()
+    {
+        yield return new WaitForSecondsRealtime(.3f);
+        gameObject.GetComponent<Renderer>().material = matHighlight;
+        yield return new WaitForSecondsRealtime(.3f);
+        gameObject.GetComponent<Renderer>().material = matDull;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -19,6 +29,9 @@ public class MiddleButton : MonoBehaviour
     private void OnMouseDown()
     {
         //Debug.Log("Button Pressed");
-        StartCoroutine(gameManager.ShowSequenceAddOne());
+        if (GameManager.Instance.playerTurn == false)
+        {
+            StartCoroutine(GameManager.Instance.ShowSequenceAddOne());
+        }
     }
 }

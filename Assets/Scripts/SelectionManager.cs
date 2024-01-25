@@ -15,38 +15,49 @@ public class SelectionManager : MonoBehaviour
     public Material[] colorMaterial;
     public Material[] color2Material;
 
-    private Vector3 toScale = new Vector3(0.5f, 0.5f, 0.5f);
+    private Vector3 toScaleLarge = new Vector3(1.5f, 1.5f, 1.5f);
+    private Vector3 toScaleNormal = new Vector3(1f, 1f, 1f);
 
     public void makeSelected()
     {
         gameObject.GetComponent<Renderer>().material = colorMaterial[chosenSelectorNumber];
-        gameObject.transform.localScale += toScale;
+        gameObject.transform.localScale = toScaleLarge;
     }
     public void makeDeselected()
     {
         gameObject.GetComponent<Renderer>().material = color2Material[chosenSelectorNumber];
-        gameObject.transform.localScale -= toScale;
+        gameObject.transform.localScale = toScaleNormal;
     }
     private void OnMouseEnter()
     {
-        makeSelected();
+        if (GameManager.Instance.playerTurn)
+        {
+            makeSelected();
+            
+        }
     }
     private void OnMouseExit()
     {
-        makeDeselected();
+        if (GameManager.Instance.playerTurn)
+        {
+            makeDeselected();
+        }
     }
     void OnMouseDown()
     {
-        playerAudio.PlayOneShot(notes[chosenSelectorNumber], 1f);
-        
+        if (GameManager.Instance.playerTurn)
+        {
+            FlashAsSelected();
+            playerAudio.PlayOneShot(notes[chosenSelectorNumber], 1f);
+            GameManager.Instance.playerNotesPlayed.Add(chosenSelectorNumber);
+            GameManager.Instance.CheckIfPlayedRightNote();
+        }
     }
 
     private void Awake()
     {
         chosenSelectorNumber = GameManager.Instance.currentSpawn;
         gameObject.GetComponent<Renderer>().material = color2Material[chosenSelectorNumber];//Set to drab colors
-
-
     }
     // Start is called before the first frame update
     void Start()
